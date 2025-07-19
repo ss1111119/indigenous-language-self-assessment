@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>族語程度自我評估 - 通用版</title>
+  <title>族語程度自我評估程式</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -135,12 +135,14 @@
 <body class="min-h-screen flex items-center justify-center px-4">
   <div id="app" class="w-full space-y-8">
     <section id="welcome-screen" class="card text-center space-y-4">
-      <h1 class="text-3xl font-bold text-indigo-700">族語程度自我評估</h1>
+      <h1 class="text-3xl font-bold text-indigo-700">族語程度自我評估程式</h1>
       <p class="text-gray-700">透過評估聽說讀寫能力，瞭解您的通用族語程度。</p>
       <button id="start-test-btn" class="btn btn-primary">開始評估</button>
     </section>
 
     <section id="test-screen" class="card hidden space-y-6">
+      <!-- 新增大標題 -->
+      <h1 class="text-3xl font-bold text-indigo-700 text-center mb-6">族語程度自我評估程式</h1>
       <div class="progress-bar-container">
         <div id="progress-bar" class="progress-bar w-0"></div>
       </div>
@@ -151,7 +153,6 @@
         <div class="rating-btn" data-score="4">部分符合</div>
         <div class="rating-btn" data-score="7">完全符合</div>
       </div>
-      <!-- 為按鈕容器新增 id="button-controls" -->
       <div id="button-controls" class="flex justify-between items-center mt-10">
         <button id="prev-question-btn" class="btn btn-secondary hidden">上一題</button>
         <button id="next-question-btn" class="btn btn-primary">下一題</button>
@@ -275,21 +276,18 @@
       const prevBtn = document.getElementById("prev-question-btn");
       const nextBtn = document.getElementById("next-question-btn");
       const submitBtn = document.getElementById("submit-test-btn");
-      const buttonControls = document.getElementById("button-controls"); // 獲取按鈕容器
+      const buttonControls = document.getElementById("button-controls"); 
 
-      // 顯示或隱藏「上一題」按鈕
       prevBtn.classList.toggle("hidden", current === 0);
       
-      // 根據是否在第一頁來調整按鈕容器的對齊方式
       if (current === 0) {
           buttonControls.classList.remove("justify-between");
-          buttonControls.classList.add("justify-end"); // 靠右對齊
+          buttonControls.classList.add("justify-end"); 
       } else {
           buttonControls.classList.remove("justify-end");
-          buttonControls.classList.add("justify-between"); // 左右分散對齊
+          buttonControls.classList.add("justify-between"); 
       }
 
-      // 顯示或隱藏「下一題」和「提交」按鈕
       nextBtn.classList.toggle("hidden", current === questions.length - 1);
       submitBtn.classList.toggle("hidden", current !== questions.length - 1);
     }
