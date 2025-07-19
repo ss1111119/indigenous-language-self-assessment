@@ -1,0 +1,266 @@
+[
+  {
+    "title": "十二年國教課程",
+    "href": "https://web.klokah.tw/twelve/learn.php",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/twelve.png",
+    "applicableLevels": ["初級", "中級", "中高級"]
+  },
+  {
+    "title": "句型篇 ( 國中版 )",
+    "href": "https://web.klokah.tw/extension/sp_junior/practice.php",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/sp_junior.png",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "句型篇 ( 高中版 )",
+    "href": "https://web.klokah.tw/extension/sp_senior/practice.php",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/sp_senior.png",
+    "applicableLevels": ["中級"]
+  },
+  {
+    "title": "族語直播共學教材",
+    "href": "https://web.klokah.tw/livetutorial/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/livetutorial.png",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "字母篇",
+    "href": "https://web.klokah.tw/extension/ab_practice/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/alphabet.png",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "歌謠篇",
+    "href": "https://web.klokah.tw/extension/song_practice/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/song.png",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "圖畫故事篇",
+    "href": "https://web.klokah.tw/extension/ps_practice/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/picturestory.png",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "生活會話篇",
+    "href": "https://web.klokah.tw/extension/con_practice/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/conversation.png",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "閱讀書寫篇",
+    "href": "https://web.klokah.tw/extension/rd_practice/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/reading.png",
+    "applicableLevels": ["中級"]
+  },
+  {
+    "title": "文化篇",
+    "href": "https://web.klokah.tw/extension/cu_practice/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/culture.png",
+    "applicableLevels": ["高級"]
+  },
+  {
+    "title": "親子溝通族語",
+    "href": "https://web.klokah.tw/parent-child/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/p&c.png?v=2",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "學習詞表",
+    "href": "https://web.klokah.tw/vocabulary/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/vocabulary.png",
+    "applicableLevels": ["初級", "中級", "中高級", "高級"]
+  },
+  {
+    "title": "情境族語",
+    "href": "https://web.klokah.tw/dialogue/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/dialogue.png",
+    "applicableLevels": ["初級", "中級", "中高級"]
+  },
+  {
+    "title": "族語短文",
+    "href": "https://web.klokah.tw/essay/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/essay.png",
+    "applicableLevels": ["初級", "中級", "中高級"]
+  },
+  {
+    "title": "閱讀文本",
+    "href": "https://web.klokah.tw/extension/readingtext/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/rdtext.png",
+    "applicableLevels": ["高級"]
+  },
+  {
+    "title": "教學模組",
+    "href": "https://web.klokah.tw/mode/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/mode.png",
+    "applicableLevels": ["初級", "中級", "中高級"]
+  },
+  {
+    "title": "互動模組",
+    "href": "https://web.klokah.tw/interact/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/interact.png",
+    "applicableLevels": ["初級", "中級", "中高級"]
+  },
+  {
+    "title": "wawa點點樂",
+    "href": "https://web.klokah.tw/wawa/word.php",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/wawa.png",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "主題式掛圖",
+    "href": "https://web.klokah.tw/flipChart/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/flipChart.png",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "LIMA有聲書",
+    "href": "https://web.klokah.tw/lima/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/lima.png",
+    "applicableLevels": ["初級"]
+  },
+  {
+    "title": "繪本中心",
+    "href": "https://web.klokah.tw/pbc/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/PBC.png",
+    "applicableLevels": ["初級", "中級", "中高級", "高級"]
+  },
+  {
+    "title": "動畫平台",
+    "href": "https://web.klokah.tw/animation/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/animation.png",
+    "applicableLevels": ["初級", "中級", "中高級"]
+  },
+  {
+    "title": "影音中心",
+    "href": "https://web.klokah.tw/video/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/video.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "自編教材",
+    "href": "https://web.klokah.tw/text/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/text.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "教案平台",
+    "href": "https://web.klokah.tw/tutorial/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/tutorial.png",
+    "applicableLevels": ["初級", "中級", "中高級", "高級"]
+  },
+  {
+    "title": "族語新聞閱讀",
+    "href": "https://web.klokah.tw/readnews/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/readnews.png?123",
+    "applicableLevels": ["高級"]
+  },
+  {
+    "title": "句法演練",
+    "href": "https://web.klokah.tw/grmpts/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/grmpts.png",
+    "applicableLevels": ["初級", "中級", "中高級", "高級"]
+  },
+  {
+    "title": "族語podcast",
+    "href": "https://web.klokah.tw/podcast/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/podcast.png",
+    "applicableLevels": ["初級", "中級", "中高級", "高級"]
+  },
+  {
+    "title": "看影片學族語",
+    "href": "https://web.klokah.tw/videoLearning/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/vlearn.png",
+    "applicableLevels": ["中高級"]
+  },
+  {
+    "title": "語法概論影片",
+    "href": "https://web.klokah.tw/sentenceVideo/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/sentenceVideo.png",
+    "applicableLevels": ["中級", "中高級", "高級"]
+  },
+  {
+    "title": "生活說族語",
+    "href": "https://web.klokah.tw/dialogue/video/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/diaVideo.png",
+    "applicableLevels": ["初級", "中級", "中高級"]
+  },
+  {
+    "title": "空中族語教室",
+    "href": "https://web.klokah.tw/classroom/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/class.png",
+    "applicableLevels": ["初級", "中級", "中高級", "高級"]
+  },
+  {
+    "title": "公務人員",
+    "href": "https://web.klokah.tw/gevideo/main.php",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/gevideo.png",
+    "applicableLevels": ["初級", "中級"]
+  },
+  {
+    "title": "直播共學",
+    "href": "https://livestudy.tw/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/17study.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "實驗室",
+    "href": "https://web.klokah.tw/lab",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/lab.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "談論雜誌",
+    "href": "https://www.ilrdf.org.tw/basic/?node=10100",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/magazine.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "單詞查詢",
+    "href": "https://web.klokah.tw/multiSearch/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/search.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "教學資源",
+    "href": "https://web.klokah.tw/resource/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/resource.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "認證測驗練習",
+    "href": "https://exam.lokahsu.org.tw/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/lokahsu.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "問題回報",
+    "href": "https://web.klokah.tw/report/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/report.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "教育訓練",
+    "href": "https://web.klokah.tw/help/index.php",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/help.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "詞彙分析",
+    "href": "https://web.klokah.tw/wordrange/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/wordrange.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "閱讀檢索",
+    "href": "https://web.klokah.tw/irs/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/irs.png",
+    "applicableLevels": null
+  },
+  {
+    "title": "相關連結",
+    "href": "https://web.klokah.tw/link/",
+    "imageSource": "https://web.klokah.tw/index/image/stamp/icon7.png",
+    "applicableLevels": null
+  }
+]
