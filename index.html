@@ -130,6 +130,26 @@
         text-decoration: none;
         cursor: pointer;
     }
+    /* 學習資源卡片樣式 */
+    .resource-card {
+      background-color: #ffffff;
+      padding: 1rem;
+      border-radius: 0.75rem; /* rounded-lg */
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      text-align: left; /* 確保卡片內部文字左對齊 */
+    }
+    .resource-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    }
+    .resource-card img {
+      /* ...其他樣式... */
+      height: auto; /* 讓高度自動調整 */
+      width: 100%; /* 寬度依然佔滿卡片 */
+      object-fit: contain; /* 或者您可以完全移除這一行，因為 height: auto 會保持比例 */
+      /* 如果使用 object-fit: contain，圖片會完全顯示在框內，可能會有留白 */
+    }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center px-4">
@@ -141,7 +161,6 @@
     </section>
 
     <section id="test-screen" class="card hidden space-y-6">
-      <!-- 新增大標題 -->
       <h1 class="text-3xl font-bold text-indigo-700 text-center mb-6">族語程度自我評估程式</h1>
       <div class="progress-bar-container">
         <div id="progress-bar" class="progress-bar w-0"></div>
@@ -164,6 +183,14 @@
       <h2 class="text-2xl font-bold text-green-600">評估結果</h2>
       <p class="text-xl font-medium" id="proficiency-description"></p>
       <p id="proficiency-level" class="text-4xl font-extrabold text-indigo-700"></p>
+      
+      <div class="mt-8 text-left">
+        <h3 class="text-xl font-semibold text-indigo-600 mb-4">為您推薦的學習資源：</h3>
+        <div id="recommended-resources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        </div>
+        <p id="no-resources-message" class="text-gray-600 hidden mt-4">目前沒有適合您程度的推薦資源。</p>
+      </div>
+
       <button id="retake-test-btn" class="btn btn-primary">重新評估</button>
     </section>
   </div>
@@ -181,8 +208,30 @@
     let indicators = [];
     let scores = [];
     let current = 0;
+    let learningResources = []; 
 
     const levelOrder = ['初級', '中級', '中高級', '高級', '優級'];
+
+    // 定義各級別的「結束題目」
+    const levelEndQuestions = {
+      '初級': "能讓別人聽懂的語音，說出日常生活的簡單語句。",
+      '中級': "能讓別人聽懂的語音，運用簡單連貫的詞句介紹個人生活環境、經驗、想法與感受等。",
+      '中高級': "能以完整語句寫出與人交流的訊息。(例如便條、卡片、簡訊或e-mail等)",
+      '高級': "能以文章表達個人較廣泛的生活經驗、感受和意見，或針對一般主題表達個人看法，並與他人交流。",
+      '優級': "能針對不同事件，有條理、有層次地寫出專業評論或表達深層的感受。"
+    };
+
+    /**
+     * Helper function to check if a given question object is a designated end-of-level question.
+     * @param {object} questionObj - The question object to check.
+     * @returns {boolean} - True if it's an end-of-level question, false otherwise.
+     */
+    function isEndOfLevelQuestion(questionObj) {
+      if (!questionObj || !questionObj.level || !questionObj.question) {
+        return false;
+      }
+      return levelEndQuestions[questionObj.level] === questionObj.question;
+    }
 
     function showMessage(message) {
         const modal = document.getElementById("messageModal");
@@ -210,13 +259,22 @@
         };
     }
 
-    async function fetchQuestions() {
+    async function fetchAppData() {
       try {
-        const res = await fetch("https://raw.githubusercontent.com/ss1111119/indigenous-language-self-assessment/main/abilityIndicatorsData.json");
-        if (!res.ok) {
-            throw new Error(`HTTP 錯誤：${res.status}`);
+        const [questionsRes, resourcesRes] = await Promise.all([
+          fetch("https://raw.githubusercontent.com/ss1111119/indigenous-language-self-assessment/main/abilityIndicatorsData.json"),
+          fetch("https://raw.githubusercontent.com/ss1111119/indigenous-language-self-assessment/main/language_learning_resources.json")
+        ]);
+
+        if (!questionsRes.ok) {
+          throw new Error(`HTTP 錯誤 (問題資料)：${questionsRes.status}`);
         }
-        const rawData = await res.json(); 
+        if (!resourcesRes.ok) {
+          throw new Error(`HTTP 錯誤 (資源資料)：${resourcesRes.status}`);
+        }
+
+        const rawData = await questionsRes.json();
+        const rawResources = await resourcesRes.json(); 
 
         let transformedIndicators = [];
         for (const skillType in rawData) {
@@ -236,19 +294,25 @@
                 }
             }
         }
-        
         indicators = transformedIndicators; 
+
+        if (Array.isArray(rawResources)) {
+            learningResources = rawResources;
+        } else {
+            console.warn("學習資源資料格式錯誤：預期為陣列。已初始化為空陣列。");
+            learningResources = []; 
+        }
 
         questions = indicators.map(i => i.question); 
 
         if (indicators.length > 0) {
           showQuestion();
         } else {
-          showMessage("未取得有效資料，請檢查資料來源。");
+          showMessage("未取得有效問題資料，請檢查資料來源。");
         }
       } catch (err) {
         console.error("無法載入資料:", err);
-        showMessage(`無法載入資料，請檢查網路連線、資料來源 URL 或資料格式。\n錯誤訊息: ${err.message}`);
+        showMessage(`無法載入資料，請檢查網路連線或資料來源 URL。\n錯誤訊息: ${err.message}`);
       }
     }
 
@@ -258,10 +322,36 @@
       const questionEl = document.getElementById("question-container");
       const q = indicators[current]; 
 
-      // 註解掉這行，以關閉「第 X 題 / 共 Y 題」的顯示
-      // document.getElementById("question-number").innerText = `第 ${current + 1} 題 / 共 ${questions.length} 題`;
+      const currentScoreDisplay = scores[current] != null ? `目前分數: ${scores[current]} 分` : '尚未作答';
+      
+      // 計算目前總分
+      const answeredScores = scores.filter(score => score != null);
+      const currentTotalScore = answeredScores.reduce((sum, score) => sum + score, 0);
+
+      // 計算目前級別的平均分數
+      const currentLevelQuestions = indicators.filter(item => item.level === q.level);
+      let currentLevelAnsweredScores = [];
+      currentLevelQuestions.forEach((levelQ, index) => {
+          const originalIndex = indicators.indexOf(levelQ); 
+          if (scores[originalIndex] != null) {
+              currentLevelAnsweredScores.push(scores[originalIndex]);
+          }
+      });
+      
+      let currentLevelAvgScore = 0;
+      if (currentLevelAnsweredScores.length > 0) {
+          const currentLevelTotalScore = currentLevelAnsweredScores.reduce((sum, score) => sum + score, 0);
+          currentLevelAvgScore = currentLevelTotalScore / currentLevelAnsweredScores.length;
+      }
+
       questionEl.innerHTML = `
         <p class="text-lg font-semibold">${q.question}</p>
+        <p class="text-sm text-gray-500 mt-2">
+            級別: ${q.level} | 
+            目前分數: ${currentScoreDisplay} | 
+            目前總分: ${currentTotalScore} 分 | 
+            ${q.level}平均: ${currentLevelAvgScore.toFixed(1)} 分
+        </p>
       `;
 
       document.querySelectorAll(".rating-btn").forEach(btn => {
@@ -288,14 +378,22 @@
           buttonControls.classList.add("justify-between"); 
       }
 
-      nextBtn.classList.toggle("hidden", current === questions.length - 1);
-      submitBtn.classList.toggle("hidden", current !== questions.length - 1);
+      const isLastQuestionInQuiz = current === questions.length - 1;
+      const isCurrentQuestionDesignatedEndOfLevel = isEndOfLevelQuestion(indicators[current]);
+
+      if (isLastQuestionInQuiz || isCurrentQuestionDesignatedEndOfLevel) {
+          nextBtn.classList.add("hidden");
+          submitBtn.classList.remove("hidden");
+      } else {
+          nextBtn.classList.remove("hidden");
+          submitBtn.classList.add("hidden");
+      }
     }
 
     document.getElementById("start-test-btn").onclick = () => {
       document.getElementById("welcome-screen").classList.add("hidden"); 
       document.getElementById("test-screen").classList.remove("hidden"); 
-      fetchQuestions(); 
+      fetchAppData(); 
     };
 
     document.querySelectorAll(".rating-btn").forEach(btn => {
@@ -303,6 +401,7 @@
         document.querySelectorAll(".rating-btn").forEach(b => b.classList.remove("selected"));
         btn.classList.add("selected"); 
         scores[current] = parseInt(btn.dataset.score); 
+        showQuestion(); 
       };
     });
 
@@ -316,61 +415,77 @@
       const currentScore = scores[current];
       const currentLevelIndex = levelOrder.indexOf(currentLevel);
 
-      let nextIndex = -1; // 用於儲存找到的下一個問題索引
-      let targetLevelIndex; // 目標級別的索引
+      let nextCalculatedIndex = current + 1; 
+      let targetLevelIndex;
+      let shouldAttemptJump = true; 
 
-      if (currentScore === 7) { // 完全符合：嘗試跳到更高一級
+      if (currentScore === 7) { 
         targetLevelIndex = currentLevelIndex + 1;
-      } else if (currentScore === 4) { // 部分符合：嘗試留在同級
+      } else if (currentScore === 4) { 
         targetLevelIndex = currentLevelIndex;
-      } else if (currentScore === 1) { // 完全不符合：嘗試跳到更低一級
+      } else if (currentScore === 1) { 
         targetLevelIndex = currentLevelIndex - 1;
       } else {
-        // 如果分數不是 1, 4, 7，則正常進入下一題
-        current++;
-        showQuestion();
-        return;
+        shouldAttemptJump = false; 
       }
 
-      // 確保目標級別索引在有效範圍內 (0 到 levelOrder.length - 1)
-      targetLevelIndex = Math.max(0, Math.min(levelOrder.length - 1, targetLevelIndex));
+      if (shouldAttemptJump) {
+        targetLevelIndex = Math.max(0, Math.min(levelOrder.length - 1, targetLevelIndex));
+        
+        let foundSpecificJumpTarget = false;
+        for (let i = current + 1; i < indicators.length; i++) {
+          const questionLevel = indicators[i].level;
+          const questionLevelIndex = levelOrder.indexOf(questionLevel);
 
-      // 從當前問題的下一題開始，尋找符合目標級別條件的問題
-      for (let i = current + 1; i < indicators.length; i++) {
-        const questionLevel = indicators[i].level;
-        const questionLevelIndex = levelOrder.indexOf(questionLevel);
-
-        if (currentScore === 7) { // 如果是「完全符合」，尋找目標級別或更高
-          if (questionLevelIndex >= targetLevelIndex) {
-            nextIndex = i;
-            break;
-          }
-        } else if (currentScore === 4) { // 如果是「部分符合」，尋找目標級別
-          if (questionLevelIndex === targetLevelIndex) {
-            nextIndex = i;
-            break;
-          }
-        } else if (currentScore === 1) { // 如果是「完全不符合」，尋找目標級別或更低
-          if (questionLevelIndex <= targetLevelIndex) {
-            nextIndex = i;
-            break;
+          if (currentScore === 7) { 
+            if (questionLevelIndex >= targetLevelIndex) {
+              nextCalculatedIndex = i;
+              foundSpecificJumpTarget = true;
+              break;
+            }
+          } else if (currentScore === 4) { 
+            if (questionLevelIndex === targetLevelIndex) {
+              nextCalculatedIndex = i;
+              foundSpecificJumpTarget = true;
+              break;
+            }
+          } else if (currentScore === 1) { 
+            if (questionLevelIndex <= targetLevelIndex) {
+              nextCalculatedIndex = i;
+              foundSpecificJumpTarget = true;
+              break;
+            }
           }
         }
-      }
-      
-      // 如果找到符合條件的跳轉點，則更新 current
-      if (nextIndex !== -1) {
-        current = nextIndex;
+
+        if (!foundSpecificJumpTarget) {
+            if (currentLevel === '初級' && currentScore === 1) {
+                current = questions.length - 1; 
+            } else {
+                current = nextCalculatedIndex; 
+            }
+        } else {
+            current = nextCalculatedIndex;
+        }
       } else {
-        // 如果沒有找到符合條件的跳轉點，則正常進入下一題
-        current++;
+        current++; 
       }
       
-      // 確保 current 不會超出問題範圍，並處理最後一題的提交按鈕顯示
       if (current >= questions.length) {
           current = questions.length - 1; 
-          document.getElementById("next-question-btn").classList.add("hidden"); 
-          document.getElementById("submit-test-btn").classList.remove("hidden"); 
+      }
+
+      const nextBtn = document.getElementById("next-question-btn");
+      const submitBtn = document.getElementById("submit-test-btn");
+      const isLastQuestionInQuiz = current === questions.length - 1;
+      const isCurrentQuestionDesignatedEndOfLevel = isEndOfLevelQuestion(indicators[current]);
+
+      if (isLastQuestionInQuiz || isCurrentQuestionDesignatedEndOfLevel) {
+          nextBtn.classList.add("hidden"); 
+          submitBtn.classList.remove("hidden"); 
+      } else {
+          nextBtn.classList.remove("hidden");
+          submitBtn.classList.add("hidden");
       }
 
       showQuestion(); 
@@ -386,41 +501,107 @@
           return showMessage("請先選擇答案，才能提交評估。"); 
       }
       
-      const answeredScores = scores.filter(score => score != null);
+      let proficiencyLevelText = "初級"; // 預設為初級
+      let proficiencyDescription = "您已具備初級族語能力，能理解並使用簡單的日常詞語和語句。";
 
-      let avg = 0;
-      if (answeredScores.length > 0) {
-          const totalScore = answeredScores.reduce((sum, score) => sum + score, 0);
-          avg = totalScore / answeredScores.length;
+      // NEW LOGIC: Determine proficiency based on highest level where average score threshold is met
+      let determinedLevelIndex = -1; // To store the index of the highest level achieved
+
+      // Iterate from highest level (優級) down to lowest (初級)
+      for (let i = levelOrder.length - 1; i >= 0; i--) {
+          const currentCheckLevel = levelOrder[i];
+          const questionsInThisLevel = indicators.filter(item => item.level === currentCheckLevel);
+          
+          let scoresForThisLevel = [];
+          questionsInThisLevel.forEach(qInLevel => {
+              const originalIndex = indicators.indexOf(qInLevel);
+              if (scores[originalIndex] != null) { // Only consider answered questions for this level
+                  scoresForThisLevel.push(scores[originalIndex]);
+              }
+          });
+
+          let levelAvgScore = 0;
+          if (scoresForThisLevel.length > 0) {
+              const levelTotalScore = scoresForThisLevel.reduce((sum, score) => sum + score, 0);
+              levelAvgScore = levelTotalScore / scoresForThisLevel.length;
+          }
+
+          // Check against the average score thresholds for each level
+          if (currentCheckLevel === '優級' && levelAvgScore >= 5.0) {
+              determinedLevelIndex = i;
+              break; // Found the highest level, stop checking
+          } else if (currentCheckLevel === '高級' && levelAvgScore >= 4.0) {
+              determinedLevelIndex = i;
+              break;
+          } else if (currentCheckLevel === '中高級' && levelAvgScore >= 3.0) {
+              determinedLevelIndex = i;
+              break;
+          } else if (currentCheckLevel === '中級' && levelAvgScore >= 2.0) {
+              determinedLevelIndex = i;
+              break;
+          } else if (currentCheckLevel === '初級' && levelAvgScore >= 1) { // 初級最低1分即可
+              determinedLevelIndex = i;
+              break;
+          }
+      }
+
+      // Set final proficiency text and description based on determined level
+      if (determinedLevelIndex !== -1) {
+          proficiencyLevelText = levelOrder[determinedLevelIndex];
+          switch (proficiencyLevelText) {
+              case '優級':
+                  proficiencyDescription = "您已具備優異的族語能力，能流暢且精準地理解和表達各種複雜主題。";
+                  break;
+              case '高級':
+                  proficiencyDescription = "您具備高級族語能力，能深入理解並有條理地表達廣泛主題。";
+                  break;
+              case '中高級':
+                  proficiencyDescription = "您已達到中高級族語程度，能應對日常和部分專業情境的溝通。";
+                  break;
+              case '中級':
+                  proficiencyDescription = "您已具備中級族語能力，能理解並表達日常生活中的一般語句。";
+                  break;
+              case '初級': 
+                  proficiencyDescription = "您已具備初級族語能力，能理解並使用簡單的日常詞語和語句。";
+                  break;
+          }
       } else {
-          avg = 0;
+          // Fallback: If no level met its specific average threshold, it defaults to 初級.
+          // This might happen if, for example, a user only answered a few questions and got 1s,
+          // resulting in an average less than 1 for初級, or if no questions were answered at all.
+          proficiencyLevelText = "初級";
+          proficiencyDescription = "您已具備初級族語能力，能理解並使用簡單的日常詞語和語句。";
       }
       
       document.getElementById("test-screen").classList.add("hidden"); 
       document.getElementById("result-screen").classList.remove("hidden"); 
       
-      let proficiencyLevelText = "";
-      let proficiencyDescription = "";
-
-      if (avg >= 6.5) { 
-        proficiencyLevelText = "優級";
-        proficiencyDescription = "您已具備優異的族語能力，能流暢且精準地理解和表達各種複雜主題。";
-      } else if (avg >= 5.5) { 
-        proficiencyLevelText = "高級";
-        proficiencyDescription = "您具備高級族語能力，能深入理解並有條理地表達廣泛主題。";
-      } else if (avg >= 4.5) { 
-        proficiencyLevelText = "中高級";
-        proficiencyDescription = "您已達到中高級族語程度，能應對日常和部分專業情境的溝通。";
-      } else if (avg >= 2.5) { 
-        proficiencyLevelText = "中級";
-        proficiencyDescription = "您已具備中級族語能力，能理解並表達日常生活中的一般語句。";
-      } else { 
-        proficiencyLevelText = "初級";
-        proficiencyDescription = "您已具備初級族語能力，能理解並使用簡單的日常詞語和語句。";
-      }
-
       document.getElementById("proficiency-level").innerText = proficiencyLevelText; 
       document.getElementById("proficiency-description").innerText = proficiencyDescription; 
+
+      const recommendedResourcesContainer = document.getElementById("recommended-resources");
+      const noResourcesMessage = document.getElementById("no-resources-message");
+      recommendedResourcesContainer.innerHTML = ''; 
+      noResourcesMessage.classList.add('hidden'); 
+
+      const filteredResources = learningResources.filter(resource => 
+          resource.applicableLevels && resource.applicableLevels.includes(proficiencyLevelText)
+      );
+
+      if (filteredResources.length > 0) {
+          filteredResources.forEach(resource => {
+              const resourceCard = `
+                  <a href="${resource.href}" target="_blank" class="resource-card block">
+                      <img src="${resource.imageSource}" alt="${resource.title}" onerror="this.onerror=null;this.src='https://placehold.co/128x128/e0e0e0/000000?text=無圖片';" class="w-full h-32 object-cover rounded-md mb-2">
+                      <h4 class="font-semibold text-md text-gray-800">${resource.title}</h4>
+                      <p class="text-sm text-gray-500">適用級別: ${resource.applicableLevels ? resource.applicableLevels.join(', ') : '不限'}</p>
+                  </a>
+              `;
+              recommendedResourcesContainer.innerHTML += resourceCard;
+          });
+      } else {
+          noResourcesMessage.classList.remove('hidden'); 
+      }
     };
 
     document.getElementById("retake-test-btn").onclick = () => location.reload();
